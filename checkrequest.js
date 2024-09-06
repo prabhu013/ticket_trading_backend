@@ -205,11 +205,17 @@ router.post("/mysell", async (req, res) => {
 
 router.post("/cancelrequest", async (req, res) => {
     try {
-        await Request.findOneAndDelete({ orderid: req.body.orderid });
-
+        let temp = await Request.findOneAndDelete({ orderid: req.body.orderid });
+        if(temp)
+        {
         await Order.findByIdAndUpdate({ _id: req.body.orderid }, { sellvalue: null })
 
         res.json({ success: true })
+        }
+        else
+        {
+            res.json({success : false})
+        }
     } catch (error) {
         console.log(error);
         res.json({ success: false })
